@@ -1,0 +1,56 @@
+{% extends "management/base.html" %}
+{% load staticfiles %}
+{% block title %}我的账户{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 well">
+                {% for my in myuser %}
+                    <h3>我的余额: {{ my.account }} </h3>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 well">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>订单号</th>
+                        <th>菜名</th>
+                        <th>消费金额</th>
+                        <th>订购日期</th>
+                    </tr>
+                    </thead>
+                    <h3>我的消费记录:</h3>
+                    <tbody>
+                    {% for order in orderInfo %}
+                        <tr>
+                            <td>{{ order.order_seq }}</td>
+                            <td>{{ order.name }}</td>
+                            <td>{{ order.total_price }}</td>
+                            <td>{{ order.order_date }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 well">
+                <a href="{% url 'set_password' %}" class="btn btn btn-primary" id="id_category_all">
+                    修改密码
+                </a>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

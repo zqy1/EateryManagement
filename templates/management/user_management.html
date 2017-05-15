@@ -1,0 +1,53 @@
+{% extends "management/base.html" %}
+{% load staticfiles %}
+{% block title %}用户管理{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 well">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>用户名</th>
+                        <th>用户昵称</th>
+                        <th>手机号</th>
+                        <th>账户余额</th>
+                        <th>用户身份</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for my in myuser %}
+
+                        <tr>
+                            <td><a href="{% url 'info_modify' %}?id={{ my.id }}">{{ my.user.username }}</a></td>
+                            <td>{{ my.nickname }}</td>
+                            <td>{{ my.mobilephone }}</td>
+                            <td>{{ my.account }}</td>
+                            {% if my.permission == 1 %}
+                                <td>普通用户</td>
+                            {% endif %}
+                            {% if my.permission == 2 %}
+                                <td>食堂管理员</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+{% endblock %}

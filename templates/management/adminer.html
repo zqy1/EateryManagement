@@ -1,0 +1,28 @@
+{% extends "management/base.html" %}
+{% load staticfiles %}
+{% block title %}管理中心{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="col-md-2">
+                    <div class="list-group">
+                        <a href="{% url 'apply_auditing' %}" class="list-group-item" id="id_category_all">
+                            申请审核
+                        </a>
+                        <a href="{% url 'user_management' %}" class="list-group-item" id="id_category_all">
+                            用户管理
+                        </a>
+                        <a href="" class="list-group-item" id="id_category_all">
+                            个人反馈
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

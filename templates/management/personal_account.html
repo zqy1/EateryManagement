@@ -1,0 +1,30 @@
+{% extends "management/base.html" %}
+{% load staticfiles %}
+{% block title %}个人中心{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="col-md-2">
+                    <div class="list-group">
+
+                        <a href="{% url 'my_account' %}" class="list-group-item">
+                            我的账户
+                        </a>
+
+                        <a href="{% url 'adminer_account' %}" class="list-group-item" id="">
+                            管理员账户
+                        </a>
+                        <a href="" class="list-group-item" id="">
+                            个人反馈
+                        </a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

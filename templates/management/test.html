@@ -1,0 +1,144 @@
+{% extends "management/base.html" %}
+{% load staticfiles %}
+{% block title %}test{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1">
+                {% if state == 'success' %}
+                    <div class="well">
+                        <h2 class="text-success text-center">注册成功！</h2>
+                    </div>
+                {% elif state == 'repeat_error' %}
+                    <div class="well">
+                        <h2 class="text-warning text-center">密码重复错误</h2>
+                    </div>
+                {% elif state == 'checkcode_error' %}
+                    <div class="well">
+                        <h2 class="text-warning text-center">验证码错误</h2>
+                    </div>
+                {% elif state == 'empty' %}
+                    <div class="well">
+                        <h2 class="text-warning text-center">密码不能为空</h2>
+                    </div>
+                {% elif state == 'too_short' %}
+                    <div class="well">
+                        <h2 class="text-warning text-center">密码不能少于6位</h2>
+                    </div>
+                {% elif state == 'phone_error' %}
+                    <div class="well">
+                        <h2 class="text-danger text-center">手机号错误</h2>
+                    </div>
+                {% elif state == 'user_exist' %}
+                    <div class="well">
+                        <h2 class="text-danger text-center">用户已经存在</h2>
+                    </div>
+                {% endif %}
+
+
+                <form method="POST" role="form" id="register" class="form-horizontal">
+                    {% csrf_token %}
+
+
+                    <div class="form-group">
+                        <label for="id_mobilephone" class="col-md-3 control-label">手机号码：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" required name="mobilephone" id="id_mobilephone"
+                                   autofocus>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_checkcode" class="col-md-3 control-label">验证码：</label>
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" required name="checkcode" id="id_checkcode">
+                        </div>
+                        <input class="btn btn-default" type="button" id="check" name="check" value="获取验证码"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_user_name" class="col-md-3 control-label">用户名：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="id_user_name" required name="username">
+                            <span class="help-block">用于登陆，可以包括大小写字母和下划线。</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_name" class="col-md-3 control-label">昵称：</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" required name="nickname" id="id_name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_passwd" class="col-md-3 control-label">密码：</label>
+                        <div class="col-md-9">
+                            <input type="password" class="form-control" required name="password" id="id_passwd">
+                            <span class="help-block">密码不得少于六位，可以包括数字，大小写字母和下划线等。</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_repasswd" class="col-md-3 control-label">重复密码：</label>
+                        <div class="col-md-9">
+                            <input type="password" class="form-control" required name="repeat_password"
+                                   id="id_repasswd">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-md-4 col-md-offset-4">
+                            <button form="register" class="btn btn btn-primary btn-block" name="regis" type="submit"
+                                    id="id_submit" value="submit">注册
+                            </button>
+
+                        </div>
+                    </div>
+
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $.ajaxSetup({
+                data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+            });
+
+            {#            $('#check').click(function(){#}
+            {#            $('#register').submit();#}
+            {#       })            #}
+            $('#check').click(function () {
+                var mobilep = $('#id_mobilephone').val();
+                $.ajax({
+                    type: "POST",
+                    data: {mobilep: mobilep},
+                    url: "{% url 'test' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+                    cache: false,
+                    dataType: "html",
+
+                    {#                        success: function(){#}
+                    {#                            alert("success");                               //成功时弹出view传回来的结果#}
+                    {#                        },#}
+                    {#                        error: function(){#}
+                    {#                            alert("网络故障");#}
+                    {#                        }#}
+                });
+                return false;
+            })
+
+        });
+
+    </script>
+
+{% endblock %}
+
+

@@ -1,0 +1,141 @@
+{% extends "management/base.html" %}
+{% load staticfiles %}
+{% block title %}查看菜品{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <div class="col-md-5">
+                    {% if book.img_set.all %}
+                        <div id="carousel-generic" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                {% for img in book.img_set.all %}
+                                    <li data-target="#carousel-generic" data-slide-to="{{ forloop.counter0 }}"
+                                        {% if forloop.first %}class="active"{% endif %}></li>
+                                {% endfor %}
+                            </ol>
+                            <div class="carousel-inner" role="listbox">
+                                {% for img in book.img_set.all %}
+                                    <div {% if forloop.first %}class="item active"{% else %}class="item"{% endif %}>
+                                        <img class="img-rounded" src="{% url 'media' img.img %}">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <a class="left carousel-control" href="#carousel-generic" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-generic" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </div>
+                    {% else %}
+                        <p class="text-center">暂无图片</p>
+                    {% endif %}
+
+                </div>
+
+                <form role="form" method="POST">
+                    {% csrf_token %}
+                    <div class="col-md-4 col-md-offset-1">
+                        <h2><input id="" title="book_name" type="text" value="{{ book.name }}" readonly required
+                                   name="name" style="background-color: #eeeeee;border:0px;text-align: center;"/></h2>
+                        <h3><input id="" title="book_author" type="text" value="供应商：{{ book.author }}" readonly required
+                                   name="author" style="background-color: #eeeeee;border:0px;"/></h3>
+                        <h3><input id="" title="book_category" type="text" value="类别：{{ book.category }}" readonly
+                                   required name="category" style="background-color: #eeeeee;border:0px;"/></h3>
+                        <h3><input id="" title="book_publish_date" type="text"
+                                   value="日期：{{ book.publish_date|date:"Y-m-d" }}" readonly required name="publish_date"
+                                   style="background-color: #eeeeee;border:0px;"/></h3>
+                        <h3>单价： <input id="food_price" title="book_price" type="text"
+                                       value="{{ book.price|floatformat:2 }}" readonly required name="price"
+                                       style="background-color: #eeeeee;border:0px;"/></h3>
+
+                        {#  <h2 class="text-center">{{ book.name }}</h2>#}
+                        {#  <h3>供应商：{{ book.author }}</h3>#}
+                        {#  <h3>类别：{{ book.category }}</h3>#}
+                        {#  <h3>日期：{{ book.publish_date|date:"Y-m-d" }}</h3>#}
+                        {#  <h3 >单价：{{ book.price|floatformat:2 }}</h3>#}
+                    </div>
+
+
+                    <br><br><br><br>
+                    <label class="col-sm-2 control-label">订购数量 </label>
+                    <input class="btn btn-primary btn-sm" id="min" name="" type="button" value="-"/>
+                    <input id="order_num" type="text" value="1" readonly required name="order_num"
+                           style="width:30px;background-color: #eeeeee;border:0px;text-align: center;"/>
+                    <input class="btn btn-primary btn-sm" id="add" name="" type="button" value="+"/>
+                    <br>
+                    <br>
+
+                    <label class="col-sm-2 control-label">所需金额 </label>
+                    <input id="total_money" type="text" value="{{ book.price|floatformat:2 }}" readonly required
+                           name="total_price" style="background-color: #eeeeee;border:0px;"/>
+                    {% for my in myuser %}
+                        <input id="my_account" type="hidden" value="{{ my.account }} " readonly required
+                               name="my_account"/>
+                    {% endfor %}
+                    <br>
+                    <br>
+                    <button class="btn btn btn-primary" type="submit">订购</button>
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+
+    <script src="http://libs.baidu.com/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            //获得文本框对象
+            var t = $("#order_num");
+            var s = $("#total_money");
+            var a = $("#food_price");
+            var x = $("#my_account");
+            {#    var y = $("#my_remainaccount");#}
+
+            //初始化数量为1,并失效减
+            $('#min').attr('disabled', true);
+            $('#add').attr('disabled', false);
+            //数量增加操作
+            x.val(parseFloat(x.val()) - parseFloat(a.val()));
+
+            $("#add").click(function () {
+                // 给获取的val加上绝对值，避免出现负数
+                t.val(Math.abs(parseInt(t.val())) + 1);
+                s.val(Math.abs(parseFloat(s.val())) + Math.abs(parseFloat(a.val())));
+
+                x.val(parseFloat(x.val()) - parseFloat(a.val()));
+                if (parseInt(t.val()) != 1) {
+                    $('#min').attr('disabled', false);
+                }
+                ;
+                if (parseFloat(x.val()) < parseFloat(a.val())) {
+                    $('#add').attr('disabled', true);
+                }
+                ;
+            })
+            //数量减少操作
+            $("#min").click(function () {
+                t.val(Math.abs(parseInt(t.val())) - 1);
+                s.val(Math.abs(parseFloat(s.val())) - Math.abs(parseFloat(a.val())));
+                {#     y.val(parseFloat(x.val())+parseFloat(a.val()));#}
+                x.val(parseFloat(x.val()) + parseFloat(a.val()));
+                if (parseInt(t.val()) == 1) {
+                    $('#min').attr('disabled', true);
+                }
+                ;
+                if (parseFloat(x.val()) >= parseFloat(a.val())) {
+                    $('#add').attr('disabled', false);
+                }
+                ;
+
+            })
+        });
+
+
+    </script>
+
+{% endblock %}
