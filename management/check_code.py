@@ -13,9 +13,9 @@ def send_sms(text, mobile):
     sms_send_uri = "/webservice/sms.php?method=Submit"
 
     # 用户名请登录用户中心->验证码、通知短信->帐户及签名设置->APIID
-    account = "C95716228"
+    account = ""
     # 密码 查看密码请登录用户中心->验证码、通知短信->帐户及签名设置->APIKEY
-    password = "4e8365090ae8355050752fc3b52bf90c"
+    password = ""
 
     # global rand_number
 
